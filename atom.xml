@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://blog.kondev.de/</id>
+    <title>Kondev Blog Blog</title>
+    <updated>2024-07-07T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://blog.kondev.de/"/>
+    <subtitle>Kondev Blog Blog</subtitle>
+    <icon>https://blog.kondev.de/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>https://blog.kondev.de/welcome</id>
+        <link href="https://blog.kondev.de/welcome"/>
+        <updated>2024-07-07T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Hi,]]></summary>
+        <content type="html"><![CDATA[<p>Hi,<br>
+<!-- -->welcome to this blog! This is the first post.</p>
+<p>I will be writing about various topics, including programming, software development, and other things.
+And I will be sharing my thoughts and experiences with you.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="who-am-i">Who am I?<a class="hash-link" aria-label="Direct link to Who am I?" title="Direct link to Who am I?" href="https://blog.kondev.de/welcome#who-am-i">​</a></h2>
+<p>Free-time programmer, interested in programming, software development and other IT-related-things.<br>
+<!-- -->I am currently working on several projects, most of which are open source.</p>
+<p>My hometown is in Germany and I am currently still going to school.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-am-i-working-on-currently">What am I working on currently?<a class="hash-link" aria-label="Direct link to What am I working on currently?" title="Direct link to What am I working on currently?" href="https://blog.kondev.de/welcome#what-am-i-working-on-currently">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="sharesimple">Sharesimple<a class="hash-link" aria-label="Direct link to Sharesimple" title="Direct link to Sharesimple" href="https://blog.kondev.de/welcome#sharesimple">​</a></h3>
+<p>Sharesimple is the most used project I am currently working on.
+It is a file sharing service that allows you to share files with others without having to register.</p>
+<p>The idea behind it is to make file sharing as easy as possible, without any hassle.</p>
+<p>So I asked myself how it would be possible to share files without having to sign up and still not have to worry about storage limits as the host.</p>
+<p>The answer was simple, just limit the file size and the time the file is available.
+Since I, as the hosting party, can see how many files are stored on the server and how much space they take up, I can easily estimate how much of the possible storage space will be used in the future and therefore limit the file size accordingly.</p>
+<p>The project is fully open source and can be found on <a href="https://github.com/sharesimple" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+<p>So far the project has been well received and I am very happy about that.</p>
+<p>I am currently planning to add many new features to the project.
+My idea is to write an admin panel for the project, so that the hosting party can easily manage the files and see how much space is being used. It should also be possible to configure the service through the admin panel.<br>
+<!-- -->Another feature I am planning is to allow direct WebRTC file sharing, so that the files are not stored on the server, but are transferred directly from the sender to the receiver via WebRTC, with the help of an intermediary server that only establishes the connection and protects the privacy of the sender and receiver.</p>
+<p>The last feature would include a new desktop client, which would necessarily include a new backend, as the current backend is not designed for external clients.<br>
+<!-- -->I am not sure whether to write this as a PWA, which would be the easiest way to make it available on all platforms and would also be the easiest way for me to write it, or try to learn new languages and write it in one language so that it can be a native application on a limited number of platforms.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="noten-app">Noten-App<a class="hash-link" aria-label="Direct link to Noten-App" title="Direct link to Noten-App" href="https://blog.kondev.de/welcome#noten-app">​</a></h3>
+<p>Noten-App is a project I started a few years ago, but never really finished.</p>
+<p>It is an app which allows Students to manage their grades and calculate their average grade. It also includes features like a homework planner.</p>
+<p>The app sadly is really buggy and outdated, so I am planning to do a complete rewrite of the app if I find the time to do so, but in the meantime I am not working on it, which is sad because I think it is a really useful app, but there are more important things to do for me.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="oslem">OSLeM<a class="hash-link" aria-label="Direct link to OSLeM" title="Direct link to OSLeM" href="https://blog.kondev.de/welcome#oslem">​</a></h3>
+<p>OSLeM is a new project for me, which leads me to get more into server-side programming in Node.js.</p>
+<p>It is a project that is supposed to make it easy to manage your digital Legacy and to make sure that your data is not lost when you die, but is still protected from unauthorized access.</p>
+<p>The project is still in the planning phase.</p>
+<p>My idea is to write a server that stores the data and encrypts it in a way it can be decrypted only by the person who leaves the data behind OR by a person who has the decryption key or even require multiple peoples keys to decrypt the data.</p>
+<p>The project is also planned to be open source.</p>
+<p>I also think about making it not only a web-app but also write a desktop client for it, so that the data can be accessed offline and the user can be sure that the data is not stored on a public-facing server, but the Legacy can also be managed by and be provided to a person that is not comfortable with using a web-app for this purpose.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="presentstat">PresentStat<a class="hash-link" aria-label="Direct link to PresentStat" title="Direct link to PresentStat" href="https://blog.kondev.de/welcome#presentstat">​</a></h3>
+<p>The last project I want to write about is PresentStat.</p>
+<p>PresentStat is a project that is supposed to make it easy to put interactive statistics into your presentations.</p>
+<p>The project has a running prototype which is not yet ready for production, but I plan to release it when I find time for it.<br>
+<!-- -->As it is not a project that is very important to me, I only work on it when I have nothing else to do.</p>
+<p>The project-prototype is also open source and can be found on <a href="https://github.com/cuzimbisonratte/presentstat" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+<p>My idea is to make it possible to create interactive statistics in your presentations, so that the audience can interact with the statistics and see immediately how the statistics change when the data changes.</p>
+<p>The biggest feature I am currently planning is to make it possible for the server to stream automatically to YouTube, because some presentation softwares (e.g. Keynote on iPad) do not allow a Web-Page to be embedded into the presentation, but allow a video-stream to be embedded, so the only way to show the statistics would be to stream the statistics to YouTube and then embed the YouTube stream into the presentation.<br>
+<!-- -->But as that would be a very complex feature to code and switching to another window on the presenters computer is not really that hard, I am not sure if I will ever implement this feature.</p>]]></content>
+        <author>
+            <name>Konstantin Protzen</name>
+            <uri>https://github.com/cuzimbisonratte</uri>
+        </author>
+        <category label="ShareSimple" term="ShareSimple"/>
+        <category label="Noten-App" term="Noten-App"/>
+        <category label="OSLeM" term="OSLeM"/>
+        <category label="PresentStat" term="PresentStat"/>
+    </entry>
+</feed>
