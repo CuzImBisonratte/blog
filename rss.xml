@@ -8,6 +8,7 @@
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <copyright>Copyright © 2024 Konstantin Protzen.</copyright>
         <item>
             <title><![CDATA[Replacing XAMPP under Ubuntu]]></title>
             <link>https://blog.kondev.de/xampp-replacement</link>

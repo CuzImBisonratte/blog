@@ -7,6 +7,7 @@
     <link rel="alternate" href="https://blog.kondev.de/"/>
     <subtitle>Kondev Blog Blog</subtitle>
     <icon>https://blog.kondev.de/img/favicon.ico</icon>
+    <rights>Copyright © 2024 Konstantin Protzen.</rights>
     <entry>
         <title type="html"><![CDATA[Replacing XAMPP under Ubuntu]]></title>
         <id>https://blog.kondev.de/xampp-replacement</id>
