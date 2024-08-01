@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkblog=self.webpackChunkblog||[]).push([[472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Replacing XAMPP under Ubuntu","permalink":"/xampp-replacement","unlisted":false},{"title":"Welcome","permalink":"/welcome","unlisted":false}]}')}}]);
