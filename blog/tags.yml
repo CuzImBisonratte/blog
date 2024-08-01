@@ -1,3 +1,6 @@
+##
+# Projects
+##
 sharesimple:
   label: ShareSimple
   permalink: /sharesimple
@@ -13,3 +16,35 @@ presentstat:
   label: PresentStat
   permalink: /presenstat
   description: Interactive polls in presentations 
+##
+# Languages
+##
+php:
+  label: PHP
+  permalink: /php
+  description: Server-Side Scripting Language
+sql:
+  label: SQL
+  permalink: /sql 
+  description: Query Language for Databases
+##
+# Services
+##
+xampp:
+  label: XAMPP
+  permalink: /xampp
+  description: A web server solution package
+nginx:
+  label: Nginx
+  permalink: /nginx
+  description: A web server like Apache
+phpmyadmin:
+  label: phpMyAdmin
+  permalink: /pma
+mysql:
+  label: MySQL
+  permalink: /mysql
+mariadb:
+  label: MariaDB
+  permalink: /maria-db
+  description: Replacement for a MySQL-Server
