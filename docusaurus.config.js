@@ -38,6 +38,17 @@ const config = {
         blog: {
           showReadingTime: true,
           routeBasePath: '/', // Serve the blog at the site's root
+          feedOptions: {
+            type: 'all',
+            copyright: `Copyright © ${new Date().getFullYear()} Konstantin Protzen.`,
+            createFeedItems: async (params) => {
+              const { blogPosts, defaultCreateFeedItems, ...rest } = params;
+              return defaultCreateFeedItems({
+                blogPosts: blogPosts.filter((item, index) => index < 100),
+                ...rest,
+              });
+            },
+          },
         },
         theme: {
           customCss: './src/css/custom.css',
