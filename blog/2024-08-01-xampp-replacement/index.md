@@ -224,8 +224,8 @@ sudo systemctl disable php8.3-fpm
 And then you can add a bash shortcut to make it easy to stop and start these services. You do that by appending the following to the .bash_aliases file (e.g. using `nano ~/.bash_aliases`):
 ```bash title="~/.bash_aliases"
 # Development services
-alias devon="sudo systemctl start php8.3-fpm && sudo systemctl start nginx && systemctl start mariadb"
-alias devoff="sudo systemctl stop php8.3-fpm && sudo systemctl stop nginx && systemctl stop mariadb"
+alias devon="sudo systemctl start php8.3-fpm && sudo systemctl start nginx && sudo systemctl start mariadb"
+alias devoff="sudo systemctl stop php8.3-fpm && sudo systemctl stop nginx && sudo systemctl stop mariadb"
 ```
 After re-opening the terminal (or running `source ~/.bash_aliases`), you can use the commands `devon` and `devoff` to turn on or off your services easily.
 
