@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkblog=self.webpackChunkblog||[]).push([[32],{8322:t=>{t.exports=JSON.parse('{"authors":[{"name":"Konstantin Protzen","title":"Hobby-Fullstack-Dev","url":"https://github.com/cuzimbisonratte","imageURL":"https://github.com/cuzimbisonratte.png","key":"konstantin","page":null,"count":3}]}')}}]);
