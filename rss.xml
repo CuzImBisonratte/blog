@@ -32,7 +32,7 @@
 <li>The Sophos AP 55 itself</li>
 <li>A USB to Serial RJ45 adapter (I recommend <a href="https://amzn.to/4meEwwE" target="_blank" rel="noopener noreferrer">this one</a>)</li>
 <li>A computer</li>
-<li>A PoE switch or injector</li>
+<li>A PoE switch or injector (we used a <a href="https://amzn.to/42chkHW" target="_blank" rel="noopener noreferrer">TP-Link TL-PoE160S</a>)</li>
 </ul></div><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li>The Sophos AP 55C itself</li>
 <li>Two USB to Serial UART adapters (we used <a href="https://amzn.to/4m8o6ps" target="_blank" rel="noopener noreferrer">this one</a>)</li>
@@ -41,7 +41,7 @@
 <li>A PoE switch or injector (we used a <a href="https://amzn.to/42chkHW" target="_blank" rel="noopener noreferrer">TP-Link TL-PoE160S</a>)</li>
 </ul></div></div></div>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="tutorial">Tutorial<a href="https://blog.kondev.de/ap55c-openwrt#tutorial" class="hash-link" aria-label="Direct link to Tutorial" title="Direct link to Tutorial">​</a></h2>
-<p>This section will guide you through the steps to flash OpenWRT on the Sophos AP 55C.</p>
+<p>This section will guide you through the steps to flash OpenWRT on the Sophos AP 55 (C).</p>
 <p>As with most Operating System installations, you will start off with a <em>Live image</em> of OpenWRT, from which you will install the full version of OpenWRT. To provide the Live image to the AP, we will use TFTP.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="step-1-install-a-tftp-server">Step 1: Install a TFTP server<a href="https://blog.kondev.de/ap55c-openwrt#step-1-install-a-tftp-server" class="hash-link" aria-label="Direct link to Step 1: Install a TFTP server" title="Direct link to Step 1: Install a TFTP server">​</a></h3>
 <p>First, you need to install a TFTP server on your computer.</p>
@@ -97,7 +97,7 @@ Then connect the second adapter to your computer and open a second terminal prog
 <p>You're done! You have successfully installed OpenWRT on your Sophos AP 55 (C) / 100 (C).</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="conclusion">Conclusion<a href="https://blog.kondev.de/ap55c-openwrt#conclusion" class="hash-link" aria-label="Direct link to Conclusion" title="Direct link to Conclusion">​</a></h2>
 <p>Installing OpenWRT on the AP is not really hard and takes about 15-30 minutes, depending on your experience with this kind of stuff.</p>
-<p>As the APs are approaching their end-of-life support from Sophos, masses of them can be found on FB Marketplace, eBay or (my recommendation for Germans) Kleinanzeigen. You can get them for around 20-30€ which is a really good price for a PoE-capable access point with really decent performance.</p>
+<p>As the APs are approaching their end-of-life support from Sophos, masses of them can be found on FB Marketplace or eBay. You can get them for around 20-30€ which is a really good price for a PoE-capable access point with really decent performance.</p>
 <p>I hope you enjoyed this blog post, and maybe you will also start running free software on your own devices.</p>
 <p>Thanks to my teammates in school for working together on this project, and thanks to the head of IT at <a href="https://lls-bad.de/" target="_blank" rel="noopener noreferrer">my school</a> for providing us with the hardware. Also thanks to <a href="https://forum.openwrt.org/t/howto-installing-openwrt-on-sophos-ap-55-and-ap-100" target="_blank" rel="noopener noreferrer">this tutorial</a> for providing a good starting point and base for this project to build on.</p>
 <p><strong>And finally, thank you for reading this!</strong></p>]]></content:encoded>

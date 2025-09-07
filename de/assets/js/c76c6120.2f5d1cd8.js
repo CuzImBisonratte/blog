@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkblog=self.webpackChunkblog||[]).push([[825],{2581:a=>{a.exports=JSON.parse('{"tag":{"label":"phpMyAdmin","permalink":"/de/tags/pma","allTagsPath":"/de/tags","count":1,"unlisted":false},"listMetadata":{"permalink":"/de/tags/pma","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
