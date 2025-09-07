@@ -131,11 +131,28 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Konstantin Protzen.<br>Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Konstantin Protzen.<br><h6 class="affiliate-note">Links to any external platform may be affiliate links. If you buy something through one of these links, I get a small commission at no extra cost for you. This helps me to keep this blog running. Thank you for your support!</h6>`,
       },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        magicComments: [
+          {
+            className: 'theme-code-block-highlighted-line',
+            line: 'highlight-next-line',
+            block: { start: 'highlight-start', end: 'highlight-end' },
+          },
+          {
+            className: 'code-block-remove-line',
+            line: 'remove-next-line',
+            block: { start: 'remove-start', end: 'remove-end' },
+          },
+          {
+            className: 'code-block-add-line',
+            line: 'add-next-line',
+            block: { start: 'add-start', end: 'add-end' },
+          },
+        ],
       },
     }),
 };
