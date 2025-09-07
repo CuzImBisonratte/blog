@@ -1,0 +1,378 @@
+---
+slug: ap55c-openwrt
+title: Flashen eines Sophos AP 55 (C) / 100 (C) mit OpenWRT
+authors: [konstantin]
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+Die Schule, die ich besuche, musste alle alten Access Points austauschen. Der IT-Leiter fragte zwei meiner Freunde und mich, ob wir versuchen wollten, eine Verwendung für die alten Geräte zu finden, da er sie nicht wegwerfen wollte.  
+
+Wir haben darüber nachgedacht und kamen auf die Idee, OpenWRT darauf zu flashen. Es hat funktioniert! Hier ist also, wie wir es gemacht haben!  
+
+{/* truncate */}
+
+:::note Zur Anleitung springen
+Dieser Blogbeitrag enthält auch eine kurze Zusammenfassung der Schritte, die wir unternommen haben, um OpenWRT auf dem AP 55C zu flashen.  
+
+Wenn du nur eine Anleitung möchtest, kannst du den ersten Teil überspringen und direkt zur  [Anleitung](#anleitung) kommen.  
+:::
+
+## Technik & Konzept
+
+Der Sophos AP 55C ist ein drahtloser Access Point, der auf einer proprietären Firmware von Sophos läuft, die bereits auf OpenWRT basiert. Das Ziel war es, die Sophos-Firmware durch eine offenere und anpassbarere Version — die Standardversion — von OpenWRT zu ersetzen.
+
+### Sophos AP 55 vs AP 55C
+
+Der Sophos AP 55C ist die für die Decke vorgesehene Version des Sophos AP 55. Während der AP 55 ein für die Wandmontage gedachtes Gerät mit externen Antennen ist, wurde der AP 55C für eine unauffällige Deckenmontage entworfen. 
+
+Der wichtige Unterschied ist, dass beide Geräte einen seriellen Konsolenport haben, der AP 55 jedoch einen simplen RJ45-Port für die Konsole verwendet, während der AP 55C UART-Pins im Inneren des Geräts verwendet. Das bedeutet, dass du den AP 55C öffnen musst, um auf die Konsole zuzugreifen, während der AP 55 über ein standartisiertes RJ45-Serial-Kabel nutzbar ist.
+
+Das bringt auch unterschiedliche Hardwareanforderungen mit sich. Der AP 55 kann mit einem normalen USB-Serial-Adapter geflasht werden, während der AP 55C einen UART-Adapter benötigt. (Wenn du ein weiteres interessantes Projekt haben möchtest, kannst du auch einen Raspberry Pi Pico als USB-UART-Brücke verwenden.)
+
+### Konzept
+
+Das Ziel war es, OpenWRT anstelle der originalen Sophos-Firmware auf dem AP laufen zu lassen.  
+
+Dafür musste man den Bootprozess des Access Points über die serielle Konsole unterbrechen, ein OpenWRT-Image per TFTP laden und es booten. Danach wird es mit `sysupgrade` fest auf dem Gerät installiert.  
+
+### Benötigte Hardware
+
+<Tabs groupId="device">
+  <TabItem value="55" label="AP 55">
+    - Ein Sophos AP 55  
+    - Ein USB-Serial RJ45-Adapter  (Ich empfehle [diesen](https://amzn.to/4meEwwE))
+    - Ein Computer
+    - Ein PoE-Switch or -Injector (Wir haben einen [TP-Link TL-PoE160S](https://amzn.to/42chkHW) verwendet)
+  </TabItem>
+  <TabItem value="55c" label="AP 55C" default>
+    - Ein Sophos AP 55C  
+    - Zwei USB-Serial UART-Adapter  (wir haben [diesen](https://amzn.to/4m8o6ps) verwendet)
+    - Ein Computer  
+    - Ein kleiner Schraubendreher  
+    - Ein PoE-Switch or -Injector (Wir haben einen [TP-Link TL-PoE160S](https://amzn.to/42chkHW) verwendet)
+
+  </TabItem>
+</Tabs>
+
+## Anleitung
+
+Hier sind die Schritte, denen du folgen kannst, um OpenWRT auf den Sophos AP 55 (C) zu flashen.
+
+Wie bei der Installation der meisten Betriebssysteme wirst du zuerst ein Live-Image von OpenWRT booten und dann von dort aus die Installation durchführen. Um das Live-Image zu booten, musst du das Image per TFTP laden. 
+
+### Schritt 1: Installiere einen TFTP-Server
+
+Zuerst benötigst du einen TFTP-Server auf deinem Computer.
+
+<Tabs groupId="os">
+  <TabItem value="windows" label="Windows">
+    Unter Windows habe ich [TFTPD64](https://pjo2.github.io/tftpd64/) als TFTP-Server gesehen. Einfach herunterladen und installieren. Dann kannst du im Programm das TFTP-Verzeichnis auswählen, in dem du auch das OpenWRT-Image ablegen wirst.
+  </TabItem>
+  <TabItem value="linux" label="Linux (debian-based)" default>
+    Unter Linux haben wir `tftpd-hpa` genutzt. Du kannst es mit deinem Paketmanager installieren. Unter Ubuntu/Debian-basierten Distributionen zum Beispiel mit:
+
+      ```bash
+      sudo apt-get install tftpd-hpa
+      sudo mkdir /srv/tftp
+      ```
+
+      Der Ordner `/srv/tftp` wird als TFTP-Stammverzeichnis verwendet, in dem du die OpenWRT-Initramfs-Kernel-Datei ablegen wirst.
+  </TabItem>
+</Tabs>
+
+### Schritt 2: Lade die OpenWRT-Firmware herunter
+
+<Tabs groupId="device">
+  <TabItem value="55" label="AP 55">
+
+    Als nächstes musst du die OpenWRT-Firmware für den Sophos AP 55 herunterladen. Du findest die Firmware auf der [OpenWRT-Downloadseite](https://downloads.openwrt.org/).
+
+    Bitte prüfe, ob die aktuelle stabile Version eine Firmware für den Sophos AP 55 bereitstellt. Falls nicht, kannst du auch eine ältere Version verwenden (zum Zeitpunkt des Schreibens ist 24.10.2 die neueste, die den AP 55 unterstützt).
+
+    Du findest die Firmware unter:
+
+    `ath79 -> generic -> sophos_ap55-initramfs-kernel.bin`
+
+    und
+
+    `ath79 -> generic -> sophos_ap100-initramfs-kernel.bin`
+
+    Lade beide Dateien herunter und lege sie in das TFTP-Stammverzeichnis, das du in Schritt 1 eingerichtet hast.
+
+    Benenne sie dann in `uImage_AP55` und `uImage_AP100` um. (Ohne Dateiendung)
+
+    :::info
+    Der AP 55 / AP 100 verwenden nahezu die gleiche Hardware. Daher benötigt der AP 55 manchmal die AP 100-Firmware, um ordnungsgemäß zu funktionieren. Lade einfach beide Firmwares herunter, um sicherzugehen, und der AP wählt die richtige aus.
+    :::
+
+  </TabItem>
+
+  <TabItem value="55c" label="AP 55C" default>
+
+    Als nächstes musst du die OpenWRT-Firmware für den Sophos AP 55C herunterladen. Du findest die Firmware auf der [OpenWRT-Downloadseite](https://downloads.openwrt.org/).
+
+    Bitte prüfe, ob die aktuelle stabile Version eine Firmware für den Sophos AP 55 bereitstellt. Falls nicht, kannst du auch eine ältere Version verwenden (zum Zeitpunkt des Schreibens ist 24.10.2 die neueste, die den AP 55 unterstützt).
+
+    Du findest die Firmware unter:
+
+    `ath79 -> generic -> sophos_ap55c-initramfs-kernel.bin`
+
+    und
+
+    `ath79 -> generic -> sophos_ap100c-initramfs-kernel.bin`
+
+    Lade beide Dateien herunter und lege sie in das TFTP-Stammverzeichnis, das du in Schritt 1 eingerichtet hast.
+
+    Benenne sie dann in `uImage_AP55` und `uImage_AP100` um. (Ohne Dateiendung)
+    :::info
+    Der AP 55 / AP 100 verwenden nahezu die gleiche Hardware. Daher benötigt der AP 55 manchmal die AP 100-Firmware, um ordnungsgemäß zu funktionieren. Lade einfach beide Firmwares herunter, um sicherzugehen, und der AP wählt die richtige aus.
+    :::
+
+  </TabItem>
+</Tabs>
+
+### Schritt 3: Verbinde den AP mit deinem TFTP-Server
+
+
+Schließe den AP mit einem Ethernet-Kabel an deinen Computer an, auf dem du den TFTP-Server eingerichtet hast.
+
+
+Setze die IPv4-Adresse deines Computers statisch auf `192.168.99.8`. Der AP wird diese Adresse verwenden, um eine Verbindung zum TFTP-Server herzustellen. Im Folgenden findest du Anweisungen für Windows und Ubuntu (mit Gnome). Für andere Betriebssysteme prüfe bitte die Dokumentation deines Betriebssystems.
+
+<Tabs groupId="os">
+  <TabItem value="windows" label="Windows">
+
+      Du kannst eine statische IP-Adresse im Netzwerk- und Freigabecenter festlegen. Gehe zu "Adaptereinstellungen ändern", klicke mit der rechten Maustaste auf deinen Ethernet-Adapter und wähle "Eigenschaften". Wähle dann "Internetprotokoll Version 4 (TCP/IPv4)" und klicke auf "Eigenschaften". Hier kannst du die statische IP-Adresse festlegen.
+
+  </TabItem>
+  <TabItem value="linux" label="Ubuntu (Gnome)" default>
+
+      Unter Ubuntu finde ich es am einfachsten, eine statische IP-Adresse über die GUI festzulegen. Öffne die Einstellungen und gehe zum Abschnitt *Netzwerk*. Hier kannst du deinen Ethernet-Adapter auswählen und eine statische IP-Adresse festlegen.
+
+      Das sieht dann ungefähr so aus:
+
+      ![Setting up Static IPv4 Address on Ubuntu 24](./ipv4-ubuntu.png)
+  </TabItem>
+</Tabs>
+
+### Schritt 4: Verbinde dich mit der seriellen Konsole des AP
+
+<Tabs groupId="device">
+  <TabItem value="55" label="AP 55">
+    Schließe den USB-zu-Seriell RJ45-Adapter an deinen Computer und den AP an. 
+  </TabItem>
+  <TabItem value="55c" label="AP 55C" default>
+    Öffne den AP 55C mit einem kleinen Schraubendreher.  
+    Die UART-Pins (von links nach rechts, mit RJ45-Port unten) sind:  
+
+    ```
+    Pin 1: VCC (3.3V) — Nicht verbinden!
+    Pin 2: GND
+    Pin 3: RX
+    Pin 4: TX
+    ```
+
+    Verbinde GND, RX und TX mit dem USB-Serial-Adapter. Verbinde den Adapter dann mit deinem Computer.
+  </TabItem>
+</Tabs>
+
+
+Jetzt musst du dich mit der seriellen Konsole des AP verbinden. Du kannst dafür jedes Terminalprogramm verwenden. Ich empfehle [PuTTY](https://www.putty.org/) für Windows und `minicom` für Linux:
+
+<Tabs groupId="os">
+  <TabItem value="windows" label="Windows">
+
+      Öffne PuTTY und setze die folgenden Einstellungen:
+
+      - Verbindungstyp: Serial
+      - Serielle Leitung: COMX (ersetze X durch die Nummer deines COM-Ports)
+      - Geschwindigkeit: 115200
+
+      Klicke dann auf "Open", um eine Verbindung zur seriellen Konsole herzustellen.
+
+  </TabItem>
+  <TabItem value="linux" label="Linux (debian-based)" default>
+
+
+      Du kannst `minicom` und `screen` verwenden, um eine Verbindung zur seriellen Konsole herzustellen. Installiere sie zuerst, falls du das noch nicht getan hast:
+
+      ```bash
+      sudo apt-get install minicom screen
+      ```
+
+      Jetzt kannst du dich mit der seriellen Konsole verbinden:
+
+      ```bash
+      sudo screen /dev/ttyUSB0 115200
+      ```
+  </TabItem>
+</Tabs>
+### Schritt 5: Unterbrich den Bootprozess
+
+Starte den AP neu. Falls er schon an den Strom angeschlossen ist, ziehe das Ethernet-Kabel ab und verbinde es wieder mit dem PoE-Switch/-Injector, um ihn neu zu starten.
+
+Sobald Ausgabe auf der seriellen Konsole erscheint, drücke Enter, um den Bootprozess zu unterbrechen. Du solltest eine Eingabeaufforderung wie diese sehen:
+
+```bash
+ath>
+```
+
+Falls die Ausgabe des Bootloaders unlesbar ist, ließ bitte den nachfolgenden Hinweis:
+
+<details>
+    <summary>Unleserliche Ausgabe auf der seriellen Konsole beheben</summary>
+
+    Der unleserliche Output wird höchstwahrscheinlich dadurch verursacht, dass der AP modifiziert wurde, um 7 Datenbits anstelle der standardmäßigen 8 Datenbits für TX (**nicht für RX**) zu verwenden!
+
+    Um dies zu beheben, musst du die RX-Leitung mit dem zweiten USB-zu-Seriell-Adapter verbinden. Die Masse (GND) muss zwischen beiden Adaptern und dem AP geteilt werden. Verbinde dann den zweiten Adapter mit deinem Computer und öffne ein zweites Terminalprogramm (PuTTY oder minicom).
+
+    In PuTTY kannst du die Datenbits im Abschnitt "Serial" der Einstellungen festlegen. Setze sie auf 7 Datenbits und verbinde dich mit dem zweiten Adapter.
+
+    Bei minicom haben wir den folgenden Befehl verwendet, um minicom mit 7 Datenbits zu starten:
+
+    ```bash
+    sudo picocom -b 115200 -d 7 -p n -f n /dev/ttyUSB1
+    ```
+
+    On the terminal with which you send commands to the AP, you can now type commands. The other terminal will show the output of the AP.
+
+    The moment the output gets garbage again, switch back to 8 bits by replacing the `-d 7` with `-d 8` in the picocom command or changing it in PuTTY.
+
+    Im Terminal, mit dem du Befehle an den AP sendest, kannst du jetzt Befehle eingeben. Das andere Terminal zeigt die Ausgabe des AP an.
+
+    Sobald die Ausgabe wieder unleserlich wird, hat der AP zu 8 Datenbits zurückgewechselt. Wechsle selber auch einfach zurück zu 8 Datenbits, indem du `-d 7` durch `-d 8` im picocom-Befehl ersetzt oder es in PuTTY änderst.
+
+</details>
+
+### Schritt 6: OpenWRT booten
+
+Jetzt kannst du das OpenWRT-Image per TFTP laden und booten. Nutze dafür die folgenden Befehle:
+
+```bash
+tftpboot
+setenv fwaddr 0x9f070000
+erase $fwaddr +$filesize
+cp.b $fileaddr $fwaddr $filesize
+iminfo $fwaddr
+```
+
+Das wird den AP mit dem Image vom TFTP-Server vorbereiten. Wenn alles funktioniert, solltest du `Verifying Checksum ... OK` in der Ausgabe sehen, dann kannst du das OpenWRT-Live-System mit dem Befehl `boot` starten.
+
+### Schritt 7: OpenWRT installieren
+
+Nachdem OpenWRT gebootet ist, solltest du den AP mit dem Internet verbinden, indem du das Ethernet-Kabel vom TFTP-Server in dein normales Netzwerk steckst.
+
+Die Konsolenverbindung wird weiterhin funktionieren, da sie über UART (AP 55C) oder einen dedizierten Konsolenport (AP 55) bereitgestellt wird.
+
+Verändere danach die Netzwerkkonfiguration des AP, um DHCP zu verwenden, mit dem Texteditor `nano`:
+
+```bash
+nano /etc/config/network
+```
+
+Ersetze darin die folgenden Zeilen:
+
+```diff
+config interface 'lan'
+    option device 'br-lan'
+    // remove-start
+    option proto 'static'
+    option ipaddr '192.168.1.1'
+    option netmask '255.255.255.0'
+    // remove-end
+    // add-start
+    option proto 'dhcp'
+    // add-end
+    option ip6assign '60'
+```
+
+Und verbinde dich mit dem Internet über DHCP, indem du die folgenden Befehle ausführst:
+
+```bash
+service network restart
+ping -c 1 openwrt.com
+```
+
+Wenn der Ping erfolgreich ist (0% Paketverlust), kannst du jetzt OpenWRT installieren, indem du den folgenden Befehl ausführst:
+
+```bash
+sysupgrade https://downloads.openwrt.org/releases/24.10.2/targets/ath79/generic/openwrt-24.10.2-ath79-generic-sophos_ap100c-squashfs-sysupgrade.bin
+```
+:::info
+Nutze dabei bitte die neueste Version der OpenWRT-Firmware — dieselbe Version wie das Initramfs-Kernel, das du zum Booten von OpenWRT verwendet hast.
+
+Wie beim Initramfs-Kernel könnte es sein, dass du die AP 100C-Firmware anstelle der AP 55C-Firmware verwenden musst. Du erkennst das daran, wenn die Installation mit einem Fehler wie *upgrade: Device sophos,ap55c not supported by this image* fehlschlägt.
+:::
+
+### Schritt 8: Abschluss der Installation
+
+Nach der Installation startet der AP neu.
+
+Aktiviere DHCP erneut in der Netzwerk-Konfiguration.
+
+<details>
+    <summary>DHCP wieder aktivieren</summary>
+
+    Verändere die Netzwerkkonfiguration des AP, um DHCP zu verwenden, mit dem Texteditor `nano`:
+
+    ```bash
+    nano /etc/config/network
+    ```
+
+    Ersetze darin die folgenden Zeilen:
+
+    ```diff
+    config interface 'lan'
+        option device 'br-lan'
+        // remove-start
+        option proto 'static'
+        option ipaddr '192.168.1.1'
+        option netmask '255.255.255.0'
+        // remove-end
+        // add-start
+        option proto 'dhcp'
+        // add-end
+        option ip6assign '60'
+    ```
+
+    und verbinde dich mit dem Internet über DHCP, indem du die folgenden Befehle ausführst:
+
+    ```bash
+    service network restart
+    ping -c 1 openwrt.com
+    ```
+    Wenn der Ping erfolgreich ist (0% Paketverlust), kannst du jetzt weiter machen.
+</details>
+
+Finde dann die IP-Adresse des APs mit:
+
+```bash
+ip a
+```
+
+Setze ein Passwort für den Benutzer `root`:
+
+```bash
+passwd
+```
+
+Das wird dann auch das neue Passwort für die Weboberfläche von OpenWRT sein.
+
+Danach kannst du die Weboberfläche unter `http://<IP_ADDRESS_OF_YOUR_AP>/` öffnen und dich mit dem Benutzernamen `root` und deinem Passwort anmelden.
+
+
+Fertig — OpenWRT läuft jetzt auf deinem Sophos AP 55 (C) / 100 (C).
+
+## Zusammenfassung
+
+Die Installation von OpenWRT auf dem AP ist nicht wirklich schwer und dauert etwa 15–30 Minuten, je nach Erfahrung.
+
+Da die APs bald ihr End-of-Life bei Sophos erreichen, findet man viele davon günstig auf Kleinanzeigen oder eBay. Für 20–30 € bekommt man damit einen PoE-fähigen Access Point mit ordentlicher Leistung.
+
+Ich hoffe, dir hat dieser Blogbeitrag gefallen — vielleicht betreibst du ja bald auch freie Software auf deinen Geräten.
+
+Danke an meine Mitschüler, die an diesem Projekt mitgearbeitet haben, und danke an den IT-Leiter meiner [Schule](https://lls-bad.de), der uns die Hardware zur Verfügung gestellt hat. Auch danke an [dieses Tutorial](https://forum.openwrt.org/t/howto-installing-openwrt-on-sophos-ap-55-and-ap-100), das einen guten Ausgangspunkt und eine Basis für dieses Projekt geboten hat.
+
+**Und zum Schluss, danke dir fürs Lesen!**
